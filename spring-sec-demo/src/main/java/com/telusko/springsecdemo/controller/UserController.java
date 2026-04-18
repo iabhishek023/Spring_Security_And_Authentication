@@ -1,5 +1,6 @@
 package com.telusko.springsecdemo.controller;
 
+import com.telusko.springsecdemo.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,6 +15,9 @@ import com.telusko.springsecdemo.service.UserService;
 
 @RestController
 public class UserController {
+
+    @Autowired
+    private JwtService jwtService;
 
 	@Autowired
 	private UserService service;
@@ -33,7 +37,7 @@ public class UserController {
                 .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
 
         if (authentication.isAuthenticated())
-            return "Success";
+            return jwtService.generateToken(user.getUsername());
         else
             return "Login failed";
 
